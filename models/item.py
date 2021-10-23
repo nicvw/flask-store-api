@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import Dict, Optional
 
-import sqlalchemy
-
 from db import db
 
 
@@ -23,7 +21,7 @@ class ItemModel(db.Model):
         self.store_id = store_id
 
     def json(self) -> Dict:
-        return {'name': self.name, 'price': self.price,}
+        return {'name': self.name, 'price': self.price, }
 
     def enriched_json(self) -> Dict:
         return {'name': self.name, 'price': self.price, 'store': self.store.name}
@@ -39,4 +37,3 @@ class ItemModel(db.Model):
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
-
