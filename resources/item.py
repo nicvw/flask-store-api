@@ -17,7 +17,7 @@ class Item(Resource):
     def get(self, name):
         data = Item.base_parser.parse_args()
         try:
-            item = ItemModel.find(name)
+            item = ItemModel.find_by_name(name)
         except:
             return {"message", "An error occured accessing the database"}, 500
 
@@ -29,7 +29,7 @@ class Item(Resource):
     @jwt_required()
     def post(self, name):
         data = Item.parser.parse_args()
-        if ItemModel.find(name):
+        if ItemModel.find_by_name(name):
             return {"message": f"An item with name {name!r} and id {data['store_id']!r} already exists."}, 400
 
         item = ItemModel(name, **data)
@@ -44,7 +44,7 @@ class Item(Resource):
     @jwt_required()
     def delete(self, name):
         data = Item.base_parser.parse_args()
-        item = ItemModel.find_by_name(name, data["store_id"])
+        item = ItemModel.find_by_name(name)
 
         if item:
             item.delete_from_db()
@@ -53,12 +53,12 @@ class Item(Resource):
     @jwt_required()
     def put(self, name):
         data = Item.parser.parse_args()
-        item = ItemModel.find_by_name(name, data["store_id"])
+        item = ItemModel.find_by_name(name)
 
         if item is None:
             item = ItemModel(name, **data)
         else:
-            item.update(**data)
+            item.price = data["price"]
 
         item.save_to_db()
 
