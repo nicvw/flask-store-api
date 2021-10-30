@@ -6,18 +6,21 @@ from db import db
 
 
 class StoreModel(db.Model):
-    __tablename__: str = 'stores'
+    __tablename__: str = "stores"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True)
 
-    items = db.relationship('ItemModel', lazy='dynamic')
+    items = db.relationship("ItemModel", lazy="dynamic")
 
     def __init__(self, name: str):
         self.name = name
 
     def json(self) -> Dict:
-        return {'name': self.name, 'items': [item.json() for item in self.items.all()]}  # self.items becomes a query builder then lazy='dynamic'
+        return {
+            "name": self.name,
+            "items": [item.json() for item in self.items.all()],
+        }  # self.items becomes a query builder when lazy='dynamic'
 
     @classmethod
     def find_by_name(cls, name: str) -> Optional[StoreModel]:
@@ -30,4 +33,3 @@ class StoreModel(db.Model):
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
-
