@@ -11,7 +11,8 @@ from resources.user import UserRegister
 from resources.store import Store, StoreList
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///data.db")
+database_uri = os.getenv("DATABASE_URL", "sqlite:///data.db").replace("postgres://", "postgresql://", 1)
+app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
 app.config["SQLALCHEMY_TRACK_MODIFICATION"] = False
 app.secret_key = "123qwe"
 
