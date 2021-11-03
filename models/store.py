@@ -18,6 +18,7 @@ class StoreModel(db.Model):
 
     def json(self) -> Dict:
         return {
+            "id": self.id,
             "name": self.name,
             "items": [item.json() for item in self.items.all()],
         }  # self.items becomes a query builder when lazy='dynamic'
