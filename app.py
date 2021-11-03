@@ -1,13 +1,12 @@
 import os
 
 from flask import Flask
-from flask_jwt import JWT
+from flask_jwt_extended import JWTManager
 from flask_restful import Api
 
-from auth import authenticate, identity
 from db import db
 from resources.item import Item, ItemList
-from resources.user import UserRegister
+from resources.user import User, UserLogin, UserRegister
 from resources.store import Store, StoreList
 
 app = Flask(__name__)
@@ -23,14 +22,16 @@ def create_tables():
     db.create_all()
 
 
-jwt = JWT(app, authenticate, identity)  # /auth
+jwt = JWTManager(app)
 
 api = Api(app=app)
+api.add_resource(UserLogin, "/auth")
 api.add_resource(Store, "/store/<string:name>")
 api.add_resource(Item, "/item/<string:name>")
 api.add_resource(ItemList, "/items")
 api.add_resource(StoreList, "/stores")
 api.add_resource(UserRegister, "/register")
+api.add_resource(User, "/user/<int:user_id>")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from flask_jwt import jwt_required
+from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 
 from models.store import StoreModel
