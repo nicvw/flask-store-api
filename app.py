@@ -1,8 +1,8 @@
 import os
 
-from flask import Flask, request
-from flask_jwt import JWT, jwt_required
-from flask_restful import Api, Resource, reqparse
+from flask import Flask
+from flask_jwt import JWT
+from flask_restful import Api
 
 from auth import authenticate, identity
 from db import db
@@ -14,6 +14,7 @@ app = Flask(__name__)
 database_uri = os.getenv("DATABASE_URL", "sqlite:///data.db").replace("postgres://", "postgresql://", 1)
 app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
 app.config["SQLALCHEMY_TRACK_MODIFICATION"] = False
+app.config["PROPOGATE_EXCEPTION"] = True
 app.secret_key = "123qwe"
 
 

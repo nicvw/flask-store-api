@@ -15,7 +15,6 @@ class Item(Resource):
     parser.add_argument("price", type=float, required=True, help="Every item needs a price!")
 
     def get(self, name):
-        data = Item.base_parser.parse_args()
         try:
             item = ItemModel.find_by_name(name)
         except:
@@ -43,7 +42,6 @@ class Item(Resource):
 
     @jwt_required()
     def delete(self, name):
-        data = Item.base_parser.parse_args()
         item = ItemModel.find_by_name(name)
 
         if item:
@@ -67,4 +65,4 @@ class Item(Resource):
 
 class ItemList(Resource):
     def get(self):
-        return {"items": [x.enriched_json() for x in ItemModel.query.all()]}
+        return {"items": [x.enriched_json() for x in ItemModel.find_all()]}
