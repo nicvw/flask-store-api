@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
 from flask_restful import Resource, reqparse
 
 from models.item import ItemModel
@@ -42,6 +42,9 @@ class Item(Resource):
 
     @jwt_required()
     def delete(self, name):
+        claims = get_jwt()
+        if not claims["is_admin"]:
+            return {"message": "Admin privilige required"}, 401
         item = ItemModel.find_by_name(name)
 
         if item:
@@ -64,5 +67,10 @@ class Item(Resource):
 
 
 class ItemList(Resource):
+    @jwt_required(optional=True)
     def get(self):
-        return {"items": [x.json() for x in ItemModel.find_all()]}
+        user_id = get_jwt_identity()
+        items = [x.json() for x in ItemModel.find_all()]
+        if user_id:
+            return {"items": items}, 200
+        return {"items": [x["name"] for x in items], "message": "Login to retrieve detailed item data"}, 200

@@ -40,7 +40,7 @@ class User(Resource):
         if not user:
             return {"message": "User not found"}, 404
         user.delete_from_db()
-        return {"message": "User delete"}, 200
+        return {"message": "User deleted"}, 200
 
 
 class UserLogin(Resource):
@@ -56,3 +56,8 @@ class UserLogin(Resource):
             }, 200
 
         return {"message": "Invalid credentials"}, 401
+
+
+class UserList(Resource):
+    def get(self):
+        return {"users": [x.json() for x in UserModel.find_all()]}
